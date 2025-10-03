@@ -1,0 +1,77 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+venv/
+env/
+ENV/
+*.egg-info/
+dist/
+build/
+
+# ML Models
+*.h5
+*.pkl
+*.joblib
+*.ckpt
+ml-pipeline/models/saved_models/*
+!ml-pipeline/models/saved_models/.gitkeep
+
+# Jupyter
+.ipynb_checkpoints/
+*.ipynb_checkpoints
+
+# Data
+ml-pipeline/data/raw/*
+ml-pipeline/data/processed/*
+!ml-pipeline/data/raw/.gitkeep
+!ml-pipeline/data/processed/.gitkeep
+
+# Logs
+logs/
+*.log
+
+# Environment variables
+.env
+.env.local
+.env.*.local
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Node.js / React
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnp/
+.pnp.js
+
+# React build
+frontend/build/
+frontend/dist/
+
+# Database
+*.db
+*.sqlite
+*.mdf
+*.ldf
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Config
+config/local.yaml
+config/secrets.yaml
+
+# API Keys
+*.key
+*.pem
+api_keys.txt

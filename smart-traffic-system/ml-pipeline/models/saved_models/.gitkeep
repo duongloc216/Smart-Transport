@@ -1,0 +1,5 @@
+# Placeholder for saved ML models
+# Models will be saved here after training:
+# - lstm_traffic_model.h5
+# - xgboost_traffic_model.pkl
+# - prophet_traffic_model.pkl

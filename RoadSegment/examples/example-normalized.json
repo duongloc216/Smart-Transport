@@ -1,0 +1,243 @@
+{
+  "id": "Spain-RoadSegment-A62-osm-24702186",
+  "type": "RoadSegment",
+  "category": {
+    "type": "StructuredValue",
+    "value": [
+      "oneway"
+    ]
+  },
+  "endPoint": {
+    "type": "geo:json",
+    "value": {
+      "type": "Point",
+      "coordinates": [
+        -4.55167335377909,
+        41.8570461783071
+      ]
+    }
+  },
+  "name": {
+    "type": "Text",
+    "value": "Valladolid-Due\u00f1as"
+  },
+  "startPoint": {
+    "type": "geo:json",
+    "value": {
+      "type": "Point",
+      "coordinates": [
+        -4.7299180606009,
+        41.6844918725019
+      ]
+    }
+  },
+  "allowedVehicleType": {
+    "type": "StructuredValue",
+    "value": [
+      "car",
+      "bus",
+      "lorry",
+      "trailer",
+      "tanker",
+      "van",
+      "caravan"
+    ]
+  },
+  "source": {
+    "type": "Text",
+    "value": "http://wwww.openstreetmap.org"
+  },
+  "totalLaneNumber": {
+    "type": "Number",
+    "value": 2
+  },
+  "location": {
+    "type": "geo:json",
+    "value": {
+      "type": "LineString",
+      "coordinates": [
+        [
+          -4.7299180606009,
+          41.6844918725019
+        ],
+        [
+          -4.72855890957602,
+          41.6860596957855
+        ],
+        [
+          -4.5520357341647,
+          41.8569278186523
+        ],
+        [
+          -4.55167335377909,
+          41.8570461783071
+        ]
+      ]
+    }
+  },
+  "minimumAllowedSpeed": {
+    "type": "Number",
+    "value": 60
+  },
+  "refRoad": {
+    "type": "Text",
+    "value": "Spain-Road-A62"
+  },
+  "maximumAllowedSpeed": {
+    "type": "Number",
+    "value": 120
+  },
+  "laneUsage": {
+    "type": "StructuredValue",
+    "value": [
+      "forward",
+      "forward"
+    ]
+  },
+  "status": {
+    "type": "Text",
+    "value": "open"
+  },
+  "statusDescription": {
+    "type": "Text",
+    "value": "Bridge state = DOWN"
+  },
+  "cyclePathMaterial": {
+    "type": "Text",
+    "value": "ASPHALT"
+  },
+  "carriagewayLength": {
+    "type": "Number",
+    "value": 0.095454461114818
+  },
+  "totalPedestrianPathWidth": {
+    "type": "Number",
+    "value": 7
+  },
+  "bridgeCount": {
+    "type": "Boolean",
+    "value": true
+  },
+  "pedestrianPathLeftHeight": {
+    "type": "Number",
+    "value": 2
+  },
+  "maximumAllowedHeight": {
+    "type": "Number",
+    "value": 72
+  },
+  "totalPedestrianPathLength": {
+    "type": "Number",
+    "value": 0.09
+  },
+  "culvertCount": {
+    "type": "Boolean",
+    "value": false
+  },
+  "roadName": {
+    "type": "Text",
+    "value": "GREEN VILLA ROAD TO CHAITHRAM HOUSE"
+  },
+  "roadClass": {
+    "type": "Text",
+    "value": "OTHER_PUBLIC_ROAD"
+  },
+  "medianHeight": {
+    "type": "Number",
+    "value": 3.6
+  },
+  "roadWork": {
+    "type": "Text",
+    "value": "OTHER"
+  },
+  "roadId": {
+    "type": "Text",
+    "value": "5272"
+  },
+  "cyclePathRightWidth": {
+    "type": "Number",
+    "value": 2.5
+  },
+  "roadMaterial": {
+    "type": "Text",
+    "value": "TAR"
+  },
+  "medianWidth": {
+    "type": "Number",
+    "value": 1.5
+  },
+  "carriagewayWidth": {
+    "type": "Number",
+    "value": 3
+  },
+  "cyclePathRightHeight": {
+    "type": "Boolean",
+    "value": true
+  },
+  "roadDirection": {
+    "type": "Text",
+    "value": "N"
+  },
+  "medianLength": {
+    "type": "Number",
+    "value": 0.09
+  },
+  "pedestrianPathMaterial": {
+    "type": "Text",
+    "value": "PAVEMENT BLOCK"
+  },
+  "cyclePathLeftWidth": {
+    "type": "Number",
+    "value": 2.5
+  },
+  "maximumAllowedWidth": {
+    "type": "Number",
+    "value": 74
+  },
+  "rightOfWayWidth": {
+    "type": "Number",
+    "value": 4
+  },
+  "cyclePathLeftHeight": {
+    "type": "Boolean",
+    "value": true
+  },
+  "maximumAllowedWeight": {
+    "type": "Number",
+    "value": 109
+  },
+  "pedestrianPathRightWidth": {
+    "type": "Number",
+    "value": 3.5
+  },
+  "pedestrianPathLeftWidth": {
+    "type": "Number",
+    "value": 3.5
+  },
+  "pedestrianPathPlacement": {
+    "type": "Text",
+    "value": "NOT_AVAILABLE"
+  },
+  "pedestrianPathRightHeight": {
+    "type": "Number",
+    "value": 2
+  },
+  "cyclePathPlacement": {
+    "type": "Text",
+    "value": "NOT_AVAILABLE"
+  },
+  "totalCyclePathWidth": {
+    "type": "Number",
+    "value": 5
+  },
+  "agency_name": {
+    "type": "Text",
+    "value": "CORPORATION"
+  },
+  "municipalityInfo": {
+    "type": "StructuredValue",
+    "value": {
+      "ulbName": "KANNUR MUNICIPAL CORPORATION"
+    }
+  }
+}
