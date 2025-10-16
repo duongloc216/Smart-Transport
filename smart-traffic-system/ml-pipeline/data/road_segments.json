@@ -1,0 +1,162 @@
+[
+  {
+    "id": "segment_001",
+    "name": "Nguyen Hue Street",
+    "description": "Main pedestrian boulevard in District 1, Ho Chi Minh City",
+    "origin": {
+      "lat": 10.7741,
+      "lng": 106.7008
+    },
+    "destination": {
+      "lat": 10.7769,
+      "lng": 106.7011
+    },
+    "road_class": "primary",
+    "speed_limit": 40,
+    "total_lanes": 6
+  },
+  {
+    "id": "segment_002",
+    "name": "Le Loi Boulevard",
+    "description": "Central shopping district, high traffic area",
+    "origin": {
+      "lat": 10.7723,
+      "lng": 106.6989
+    },
+    "destination": {
+      "lat": 10.7741,
+      "lng": 106.7008
+    },
+    "road_class": "primary",
+    "speed_limit": 50,
+    "total_lanes": 6
+  },
+  {
+    "id": "segment_003",
+    "name": "Vo Van Tan Street",
+    "description": "Arterial road connecting District 3",
+    "origin": {
+      "lat": 10.7793,
+      "lng": 106.6931
+    },
+    "destination": {
+      "lat": 10.7826,
+      "lng": 106.6952
+    },
+    "road_class": "secondary",
+    "speed_limit": 50,
+    "total_lanes": 4
+  },
+  {
+    "id": "segment_004",
+    "name": "Nguyen Thi Minh Khai Street",
+    "description": "Major east-west corridor",
+    "origin": {
+      "lat": 10.7874,
+      "lng": 106.6989
+    },
+    "destination": {
+      "lat": 10.7889,
+      "lng": 106.7031
+    },
+    "road_class": "primary",
+    "speed_limit": 60,
+    "total_lanes": 6
+  },
+  {
+    "id": "segment_005",
+    "name": "Cach Mang Thang Tam Street",
+    "description": "Heavy commercial traffic route",
+    "origin": {
+      "lat": 10.7780,
+      "lng": 106.6651
+    },
+    "destination": {
+      "lat": 10.7820,
+      "lng": 106.6691
+    },
+    "road_class": "primary",
+    "speed_limit": 60,
+    "total_lanes": 8
+  },
+  {
+    "id": "segment_006",
+    "name": "Dien Bien Phu Street",
+    "description": "Major diagonal route through multiple districts",
+    "origin": {
+      "lat": 10.7965,
+      "lng": 106.6919
+    },
+    "destination": {
+      "lat": 10.8003,
+      "lng": 106.6965
+    },
+    "road_class": "primary",
+    "speed_limit": 60,
+    "total_lanes": 6
+  },
+  {
+    "id": "segment_007",
+    "name": "Nguyen Dinh Chieu Street",
+    "description": "District 1 to District 3 connector",
+    "origin": {
+      "lat": 10.7754,
+      "lng": 106.6938
+    },
+    "destination": {
+      "lat": 10.7789,
+      "lng": 106.6920
+    },
+    "road_class": "secondary",
+    "speed_limit": 50,
+    "total_lanes": 4
+  },
+  {
+    "id": "segment_008",
+    "name": "Nam Ky Khoi Nghia Street",
+    "description": "High-rise business district route",
+    "origin": {
+      "lat": 10.7755,
+      "lng": 106.7023
+    },
+    "destination": {
+      "lat": 10.7800,
+      "lng": 106.7045
+    },
+    "road_class": "primary",
+    "speed_limit": 60,
+    "total_lanes": 6
+  },
+  {
+    "id": "segment_009",
+    "name": "Tran Hung Dao Street",
+    "description": "Connects District 1 to District 5",
+    "origin": {
+      "lat": 10.7622,
+      "lng": 106.6859
+    },
+    "destination": {
+      "lat": 10.7598,
+      "lng": 106.6810
+    },
+    "road_class": "primary",
+    "speed_limit": 60,
+    "total_lanes": 6
+  },
+  {
+    "id": "segment_010",
+    "name": "Nguyen Huu Canh Street",
+    "description": "Riverside route, tourist area",
+    "origin": {
+      "lat": 10.7878,
+      "lng": 106.7124
+    },
+    "destination": {
+      "lat": 10.7915,
+      "lng": 106.7158
+    },
+    "road_class": "secondary",
+    "speed_limit": 50,
+    "total_lanes": 4
+  }
+]
