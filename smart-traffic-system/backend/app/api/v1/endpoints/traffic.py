@@ -188,7 +188,7 @@ async def get_current_traffic(
         return CurrentTrafficResponse(
             success=True,
             road_segment_id=road_segment_id,
-            timestamp=current['timestamp'],
+            timestamp=current.get('timestamp') or datetime.now(),
             speed=current['speed'],
             intensity=current['intensity'],
             occupancy=current['occupancy'],
@@ -235,55 +235,90 @@ async def get_traffic_history(
     try:
         from sqlalchemy import text
         
-        # Default time range: last 24 hours
-        if not end_date:
-            end_date = datetime.now()
-        if not start_date:
-            start_date = end_date - timedelta(days=1)
-        
         # Query historical data
-        query = text("""
-            SELECT TOP :limit
-                DateObserved,
-                AverageVehicleSpeed,
-                Intensity,
-                Occupancy,
-                Congested
-            FROM TrafficFlowObserved
-            WHERE RefRoadSegment = :segment_id
-            AND DateObserved BETWEEN :start_date AND :end_date
-            ORDER BY DateObserved DESC
-        """)
+        # Use dateObservedTo / dateObservedFrom when available. If both are NULL
+        # fall back to DateObserved. We use COALESCE to filter by the most
+        # appropriate timestamp and to order results.
         
-        result = db.execute(
-            query,
-            {
-                'segment_id': road_segment_id,
-                'start_date': start_date,
-                'end_date': end_date,
-                'limit': limit
-            }
-        )
-        
+        # If user provides date range, use it; otherwise get latest records regardless of date
+        if start_date and end_date:
+            query_str = f"""
+                SELECT TOP {limit}
+                    DateObserved,
+                    dateObservedFrom,
+                    dateObservedTo,
+                    AverageVehicleSpeed,
+                    Intensity,
+                    Occupancy,
+                    Congested
+                FROM TrafficFlowObserved
+                WHERE RefRoadSegment = :segment_id
+                  AND COALESCE(dateObservedTo, dateObservedFrom, DateObserved) BETWEEN :start_date AND :end_date
+                ORDER BY COALESCE(dateObservedTo, dateObservedFrom, DateObserved) DESC
+            """
+            result = db.execute(
+                text(query_str),
+                {
+                    'segment_id': road_segment_id,
+                    'start_date': start_date,
+                    'end_date': end_date
+                }
+            )
+        else:
+            # No date filter - get latest records
+            query_str = f"""
+                SELECT TOP {limit}
+                    DateObserved,
+                    dateObservedFrom,
+                    dateObservedTo,
+                    AverageVehicleSpeed,
+                    Intensity,
+                    Occupancy,
+                    Congested
+                FROM TrafficFlowObserved
+                WHERE RefRoadSegment = :segment_id
+                ORDER BY COALESCE(dateObservedTo, dateObservedFrom, DateObserved, ID) DESC
+            """
+            result = db.execute(
+                text(query_str),
+                {
+                    'segment_id': road_segment_id
+                }
+            )
+            # Set dates for response
+            if not end_date:
+                end_date = datetime.now()
+            if not start_date:
+                start_date = end_date - timedelta(days=30)  # Show we got last 30 days of data
+
         records = result.fetchall()
-        
+
         if not records:
             raise HTTPException(
                 status_code=404,
                 detail=f"No historical data found for segment '{road_segment_id}'"
             )
-        
-        # Format data
-        historical_data = [
-            HistoricalTrafficData(
-                timestamp=row.DateObserved,
-                speed=float(row.AverageVehicleSpeed),
-                intensity=float(row.Intensity),
-                occupancy=float(row.Occupancy),
-                congested=bool(row.Congested)
+
+        # Format data: choose timestamp in order of preference:
+        # dateObservedTo -> dateObservedFrom -> DateObserved
+        historical_data = []
+        for row in records:
+            # SQLAlchemy row may use keys in original case, normalize with getattr
+            dt_to = getattr(row, 'dateObservedTo', None) or getattr(row, 'dateobservedto', None)
+            dt_from = getattr(row, 'dateObservedFrom', None) or getattr(row, 'dateobservedfrom', None)
+            dt_obs = getattr(row, 'DateObserved', None) or getattr(row, 'dateobserved', None)
+
+            timestamp = dt_to or dt_from or dt_obs or datetime.now()
+
+            historical_data.append(
+                HistoricalTrafficData(
+                    timestamp=timestamp,
+                    speed=float(row.AverageVehicleSpeed) if row.AverageVehicleSpeed is not None else 0.0,
+                    intensity=float(row.Intensity) if row.Intensity is not None else 0.0,
+                    occupancy=float(row.Occupancy) if row.Occupancy is not None else 0.0,
+                    congested=bool(row.Congested)
+                )
             )
-            for row in records
-        ]
         
         return TrafficHistoryResponse(
             success=True,

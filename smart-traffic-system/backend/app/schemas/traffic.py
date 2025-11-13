@@ -62,6 +62,7 @@ class TrafficPredictionResponse(BaseModel):
     metadata: Optional[dict] = None
     
     model_config = {
+        "populate_by_name": True,  # Allow both ml_model_used and model_used
         "protected_namespaces": (),
         "json_schema_extra": {
             "example": {

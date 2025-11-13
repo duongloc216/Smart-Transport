@@ -6,6 +6,7 @@ Handles intelligent route finding with traffic prediction
 from fastapi import APIRouter, Depends, HTTPException, Query
 from typing import List, Optional
 from datetime import datetime
+import json
 from sqlalchemy.orm import Session
 
 from app.core.database import get_db
@@ -15,7 +16,7 @@ from app.schemas.routing import (
     AlternativeRoutesRequest,
     RoadStatusResponse
 )
-# from app.services.routing_service import RoutingService
+from app.services.routing_service import get_routing_service
 
 router = APIRouter()
 
@@ -28,44 +29,79 @@ async def find_optimal_route(
     """
     Tìm đường đi tối ưu từ điểm A đến điểm B
     
+    Uses A* algorithm with ML-predicted traffic conditions
+    
     Parameters:
-    - origin: Tọa độ điểm xuất phát (lat, lon)
-    - destination: Tọa độ điểm đích (lat, lon)
-    - mode: Chế độ (fastest, shortest, avoid_traffic)
-    - use_prediction: Có sử dụng dự đoán traffic không
-    - avoid_accidents: Tránh tai nạn
-    - avoid_construction: Tránh khu vực thi công
+    - origin: Origin road segment ID
+    - destination: Destination road segment ID
+    - departure_time: Departure time (optional, default: now)
     
     Returns:
-    - Optimal route with segments, distance, duration
+    - Optimal route with segments, distance, estimated time
     """
     try:
-        # TODO: Implement routing algorithm
+        routing_service = get_routing_service(db)
+        
+        # Find optimal route
+        result = routing_service.find_optimal_route(
+            origin=request.origin,
+            destination=request.destination,
+            departure_time=request.departure_time
+        )
+        
+        if not result['success']:
+            raise HTTPException(status_code=404, detail=result.get('error', 'Route not found'))
+        
+        # Parse GeoJSON coordinates from database
+        from app.models.traffic import RoadSegment
+        
+        for segment in result['segments']:
+            segment_id = segment['segment_id']
+            # Fetch segment with coordinates
+            db_segment = db.query(RoadSegment).filter(RoadSegment.id == segment_id).first()
+            
+            if db_segment:
+                try:
+                    # Parse GeoJSON startPoint and endPoint
+                    if db_segment.startPoint:
+                        start_geojson = json.loads(db_segment.startPoint)
+                        if 'coordinates' in start_geojson:
+                            segment['start_coordinates'] = start_geojson['coordinates']  # [lon, lat]
+                    
+                    if db_segment.endPoint:
+                        end_geojson = json.loads(db_segment.endPoint)
+                        if 'coordinates' in end_geojson:
+                            segment['end_coordinates'] = end_geojson['coordinates']  # [lon, lat]
+                except (json.JSONDecodeError, KeyError, TypeError) as e:
+                    # If parse fails, skip coordinates
+                    print(f"Warning: Could not parse GeoJSON for {segment_id}: {e}")
+        
         return {
             "success": True,
             "route": {
-                "segments": [
-                    {
-                        "road_segment_id": "segment_001",
-                        "name": "Nguyen Hue Street",
-                        "distance": 1500,
-                        "duration": 180,
-                        "traffic_speed": 30,
-                        "geometry": {
-                            "type": "LineString",
-                            "coordinates": [[106.7, 10.75], [106.71, 10.76]]
-                        }
-                    }
-                ],
-                "total_distance": 1500,
-                "total_duration": 180,
-                "traffic_conditions": "moderate"
+                "segments": result['segments'],
+                "total_distance": result['total_distance_km'],
+                "total_duration": result['estimated_time_min'],
+                "traffic_conditions": "ML-predicted"
             },
             "origin": request.origin,
             "destination": request.destination,
-            "mode": request.mode,
-            "generated_at": datetime.now()
+            "mode": request.mode or "optimal",
+            "departure_time": result.get('departure_time'),
+            "estimated_arrival_time": result.get('estimated_arrival_time'),
+            "generated_at": datetime.now(),
+            "incidents_avoided": result.get('incidents_avoided', 0),
+            "prediction_based": result.get('prediction_based', True),
+            "explanation": result.get('explanation', '')
         }
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+        
+    except HTTPException:
+        raise
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
@@ -79,30 +115,44 @@ async def find_alternative_routes(
     Tìm nhiều lộ trình thay thế
     
     Parameters:
-    - origin: Điểm xuất phát
-    - destination: Điểm đích
+    - origin: Điểm xuất phát (segment ID)
+    - destination: Điểm đích (segment ID)
     - num_alternatives: Số lộ trình thay thế (1-5)
     
     Returns:
     - List of alternative routes sorted by preference
     """
     try:
-        # TODO: Find multiple routes
-        return [
-            {
-                "success": True,
-                "route": {
-                    "segments": [],
-                    "total_distance": 2000,
-                    "total_duration": 240,
-                    "traffic_conditions": "light"
-                },
-                "origin": request.origin,
-                "destination": request.destination,
-                "mode": "fastest",
-                "generated_at": datetime.now()
-            }
-        ]
+        routing_service = get_routing_service(db)
+        
+        # Find alternative routes
+        routes = routing_service.find_alternative_routes(
+            origin=request.origin,
+            destination=request.destination,
+            departure_time=request.departure_time,
+            num_routes=min(request.num_alternatives or 3, 5)
+        )
+        
+        # Format response
+        results = []
+        for i, route in enumerate(routes):
+            if route['success']:
+                results.append({
+                    "success": True,
+                    "route": {
+                        "segments": route['segments'],
+                        "total_distance": route['total_distance_km'],
+                        "total_duration": route['estimated_time_min'],
+                        "traffic_conditions": f"Alternative {i+1}"
+                    },
+                    "origin": request.origin,
+                    "destination": request.destination,
+                    "mode": "alternative",
+                    "generated_at": datetime.now()
+                })
+        
+        return results
+        
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
